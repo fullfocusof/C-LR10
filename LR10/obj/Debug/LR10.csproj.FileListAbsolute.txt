@@ -8,3 +8,14 @@ E:\Projects\C#\LR10\LR10\obj\Debug\LR10.csproj.GenerateResource.cache
 E:\Projects\C#\LR10\LR10\obj\Debug\LR10.csproj.CoreCompileInputs.cache
 E:\Projects\C#\LR10\LR10\obj\Debug\LR10.exe
 E:\Projects\C#\LR10\LR10\obj\Debug\LR10.pdb
+D:\Users\class\source\repos\C-LR10\LR10\bin\Debug\LR10.exe.config
+D:\Users\class\source\repos\C-LR10\LR10\bin\Debug\LR10.exe
+D:\Users\class\source\repos\C-LR10\LR10\bin\Debug\LR10.pdb
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.csproj.AssemblyReference.cache
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.csproj.SuggestedBindingRedirects.cache
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.TextEditorForm.resources
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.Properties.Resources.resources
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.csproj.GenerateResource.cache
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.csproj.CoreCompileInputs.cache
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.exe
+D:\Users\class\source\repos\C-LR10\LR10\obj\Debug\LR10.pdb
