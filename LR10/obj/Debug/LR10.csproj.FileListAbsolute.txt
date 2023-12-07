@@ -1,0 +1,10 @@
+E:\Projects\C#\LR10\LR10\bin\Debug\LR10.exe.config
+E:\Projects\C#\LR10\LR10\bin\Debug\LR10.exe
+E:\Projects\C#\LR10\LR10\bin\Debug\LR10.pdb
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.csproj.AssemblyReference.cache
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.TextEditorForm.resources
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.Properties.Resources.resources
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.csproj.GenerateResource.cache
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.csproj.CoreCompileInputs.cache
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.exe
+E:\Projects\C#\LR10\LR10\obj\Debug\LR10.pdb
