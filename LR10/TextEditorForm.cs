@@ -28,8 +28,6 @@ namespace LR10
             LeftToolStripButton.ImageIndex = 0;
             CenterToolStripButton.ImageIndex = 1;   
             RightToolStripButton.ImageIndex = 2;
-
-            HideAllToolStripButtons();
         }
 
         private void OpenToolStripButton_Click(object sender, EventArgs e)
@@ -84,8 +82,7 @@ namespace LR10
 
         private void TextEdit_TextChanged(object sender, EventArgs e)
         {
-            docChanged = true;
-            SizeTSComboBox.Text = TextEdit.SelectionFont.Size.ToString();
+            docChanged = true;         
         }
 
         private void HelpToolStripButton_Click(object sender, EventArgs e)
@@ -96,45 +93,67 @@ namespace LR10
         private void BoldToolStripButton_Click(object sender, EventArgs e)
         {
             if (BoldToolStripButton.Checked)
+            {
+                BoldToolStripMenuItem.Checked = true;
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Bold);
+            }
             else
+            {
+                BoldToolStripMenuItem.Checked = false;
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Bold);
+            }
         }
 
         private void ItalicToolStripButton_Click(object sender, EventArgs e)
         {
             if (ItalicToolStripButton.Checked)
+            {
+                ItalicToolStripMenuItem.Checked = true;
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Italic);
+            }   
             else
+            {
+                ItalicToolStripMenuItem.Checked = false;
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Italic);
+            }
+                
         }
 
         private void UnderlineToolStripButton_Click(object sender, EventArgs e)
         {
             if (UnderlineToolStripButton.Checked)
+            {
+                UnderlineToolStripMenuItem.Checked = true;
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Underline);
+            }
             else
+            {
+                UnderlineToolStripMenuItem.Checked = false;
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Underline);
+            }
         }
 
         private void TextEdit_SelectionChanged(object sender, EventArgs e)
         {
             if (TextEdit.SelectionFont == null) return;
-            BoldToolStripButton.Checked = TextEdit.SelectionFont.Bold;
-            ItalicToolStripButton.Checked = TextEdit.SelectionFont.Italic;
-            UnderlineToolStripButton.Checked = TextEdit.SelectionFont.Underline;
-            SizeTSComboBox.Text = TextEdit.SelectionFont.Size.ToString();
 
-            CenterToolStripButton.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Center;
-            LeftToolStripButton.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Left;
-            RightToolStripButton.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Right;
+            BoldToolStripButton.Checked = BoldToolStripMenuItem.Checked = TextEdit.SelectionFont.Bold;
+            ItalicToolStripButton.Checked = ItalicToolStripMenuItem.Checked = TextEdit.SelectionFont.Italic;
+            UnderlineToolStripButton.Checked = UnderlineToolStripButton.Checked = TextEdit.SelectionFont.Underline;
+
+            SizeTSComboBox.Text = TextEdit.SelectionFont.Size.ToString();
+            SizeInMenuToolStripComboBox.Text = TextEdit.SelectionFont.Size.ToString();
+
+            CenterToolStripButton.Checked = CenterToolStripMenuItem.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Center;
+            LeftToolStripButton.Checked = LeftToolStripMenuItem.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Left;
+            RightToolStripButton.Checked = RightToolStripMenuItem.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Right;
         }
 
-        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e) // не только так
+        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e) // ??? + синхронизация
         {
             if (SizeTSComboBox.SelectedItem != null)
             {
-                int.TryParse(SizeTSComboBox.SelectedItem.ToString(), out int fontSize);    
+                int.TryParse(SizeTSComboBox.SelectedItem.ToString(), out int fontSize);
                 TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, fontSize);
             }
             else if (int.TryParse(SizeTSComboBox.Text, out int customFontSize))
@@ -164,8 +183,9 @@ namespace LR10
 
         private void CenterToolStripButton_Click(object sender, EventArgs e)
         {
-            if (RightToolStripButton.Checked) RightToolStripButton.Checked = false;
-            if (LeftToolStripButton.Checked) LeftToolStripButton.Checked = false;
+            CenterToolStripMenuItem.Checked = true;
+            if (RightToolStripButton.Checked) RightToolStripButton.Checked = false; RightToolStripMenuItem.Checked = false;
+            if (LeftToolStripButton.Checked) LeftToolStripButton.Checked = false; LeftToolStripMenuItem.Checked = false;
 
             if (TextEdit.SelectionAlignment == HorizontalAlignment.Center) TextEdit.SelectionAlignment = HorizontalAlignment.Left;
             else TextEdit.SelectionAlignment = HorizontalAlignment.Center;
@@ -173,16 +193,18 @@ namespace LR10
 
         private void LeftToolStripButton_Click(object sender, EventArgs e)
         {
-            if (CenterToolStripButton.Checked) CenterToolStripButton.Checked = false;
-            if (RightToolStripButton.Checked) RightToolStripButton.Checked = false;
+            LeftToolStripMenuItem.Checked = true;
+            if (CenterToolStripButton.Checked) CenterToolStripButton.Checked = false; CenterToolStripMenuItem.Checked = false;
+            if (RightToolStripButton.Checked) RightToolStripButton.Checked = false; RightToolStripMenuItem.Checked = false;
 
             TextEdit.SelectionAlignment = HorizontalAlignment.Left;
         }
 
         private void RightToolStripButton_Click(object sender, EventArgs e)
         {
-            if (CenterToolStripButton.Checked) CenterToolStripButton.Checked = false;
-            if (LeftToolStripButton.Checked) LeftToolStripButton.Checked = false;
+            RightToolStripMenuItem.Checked = true;
+            if (CenterToolStripButton.Checked) CenterToolStripButton.Checked = false; CenterToolStripMenuItem.Checked = false;
+            if (LeftToolStripButton.Checked) LeftToolStripButton.Checked = false; LeftToolStripMenuItem.Checked = false;
 
             if (TextEdit.SelectionAlignment == HorizontalAlignment.Right) TextEdit.SelectionAlignment = HorizontalAlignment.Left;
             else TextEdit.SelectionAlignment = HorizontalAlignment.Right;
@@ -213,66 +235,114 @@ namespace LR10
             }
         }
 
-        private void HideAllToolStripButtons()
+        private void FontBackColorToolStripButton_Click(object sender, EventArgs e)
         {
-            foreach (ToolStripItem item in ToolStrip.Items)
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
-                if(item is ToolStripButton button)
+                TextEdit.SelectionBackColor = colorDialog1.Color;
+                TextEdit.Focus();
+            }
+        }
+
+        private void BoldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (BoldToolStripMenuItem.Checked)
+            {
+                BoldToolStripButton.Checked = true;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Bold);
+            }
+            else
+            {
+                BoldToolStripButton.Checked = false;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Bold);
+            }
+        }
+
+        private void ItalicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ItalicToolStripMenuItem.Checked)
+            {
+                ItalicToolStripButton.Checked = true;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Italic);
+            }
+            else
+            {
+                ItalicToolStripButton.Checked = false;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Italic);
+            }
+        }
+
+        private void UnderlineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (UnderlineToolStripMenuItem.Checked)
+            {
+                UnderlineToolStripButton.Checked = true;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Underline);
+            } 
+            else
+            {
+                UnderlineToolStripButton.Checked = false;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Underline);
+            }          
+        }
+
+        private void LeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LeftToolStripButton.Checked = true;
+            if (CenterToolStripMenuItem.Checked) CenterToolStripButton.Checked = false; CenterToolStripMenuItem.Checked = false;
+            if (RightToolStripMenuItem.Checked) RightToolStripButton.Checked = false; RightToolStripMenuItem.Checked = false;
+
+            TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+        }
+
+        private void CenterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CenterToolStripButton.Checked = true;
+            if (RightToolStripMenuItem.Checked) RightToolStripButton.Checked = false; RightToolStripMenuItem.Checked = false;
+            if (LeftToolStripMenuItem.Checked) LeftToolStripButton.Checked = false; LeftToolStripMenuItem.Checked = false;
+
+            if (TextEdit.SelectionAlignment == HorizontalAlignment.Center) TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+            else TextEdit.SelectionAlignment = HorizontalAlignment.Center;
+        }
+
+        private void RightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RightToolStripButton.Checked = true;
+            if (CenterToolStripMenuItem.Checked) CenterToolStripButton.Checked = false; CenterToolStripMenuItem.Checked = false;
+            if (LeftToolStripMenuItem.Checked) LeftToolStripButton.Checked = false; LeftToolStripMenuItem.Checked = false;
+
+            if (TextEdit.SelectionAlignment == HorizontalAlignment.Right) TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+            else TextEdit.SelectionAlignment = HorizontalAlignment.Right;
+        }
+
+        private void TextEditorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (docChanged)
+            {
+                DialogResult result = MessageBox.Show("Хотите сохранить текущий документ?", "Сохранение документа", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
                 {
-                    button.Visible = false;
+                    SaveToolStripButton_Click(sender, e);
                 }
-                if(item is ToolStripComboBox cb)
+                else if (result == DialogResult.Cancel)
                 {
-                    cb.Visible = false;
+                    return;
                 }
             }
         }
 
-        private void Menu_Choose(object sender, EventArgs e)
+        private void SizeInMenuToolStripComboBox_DropDownClosed(object sender, EventArgs e) // ???
         {
-            var clickedItem = (ToolStripMenuItem)sender;
-
-            if (clickedItem == FileToolStripMenuItem)
+            if (SizeInMenuToolStripComboBox.SelectedItem != null)
             {
-                HideAllToolStripButtons();
-
-                CreateToolStripButton.Visible = true;
-                OpenToolStripButton.Visible = true;
-                SaveToolStripButton.Visible = true;
+                int.TryParse(SizeInMenuToolStripComboBox.SelectedItem.ToString(), out int fontSize);
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, fontSize);
             }
-            else if (clickedItem == BuffToolStripMenuItem)
+            else if (int.TryParse(SizeInMenuToolStripComboBox.Text, out int customFontSize))
             {
-                HideAllToolStripButtons();
-
-                CutToolStripButton.Visible = true;
-                CopyToolStripButton.Visible = true;
-                InsertToolStripButton.Visible = true;
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customFontSize);
             }
-            else if(clickedItem == FontToolStripMenuItem)
-            {
-                HideAllToolStripButtons();
-
-                BoldToolStripButton.Visible = true;
-                ItalicToolStripButton.Visible = true;
-                UnderlineToolStripButton.Visible = true;
-                FontColorToolStripButton.Visible = true;
-                FontBackColorToolStripButton.Visible = true;
-                SizeTSComboBox.Visible = true;
-            }
-            else if (clickedItem == AllignToolStripMenuItem)
-            {
-                HideAllToolStripButtons();
-
-                LeftToolStripButton.Visible = true;
-                CenterToolStripButton.Visible = true;
-                RightToolStripButton.Visible = true;
-            }
-            else if(clickedItem == FontStyleToolStripMenuItem)
-            {
-                HideAllToolStripButtons();
-
-                FontToolStripButton.Visible = true;
-            }
+            TextEdit.Focus();
         }
     }
 }
