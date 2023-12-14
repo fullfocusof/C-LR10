@@ -139,7 +139,7 @@ namespace LR10
 
             BoldToolStripButton.Checked = BoldToolStripMenuItem.Checked = TextEdit.SelectionFont.Bold;
             ItalicToolStripButton.Checked = ItalicToolStripMenuItem.Checked = TextEdit.SelectionFont.Italic;
-            UnderlineToolStripButton.Checked = UnderlineToolStripButton.Checked = TextEdit.SelectionFont.Underline;
+            UnderlineToolStripButton.Checked = UnderlineToolStripMenuItem.Checked = TextEdit.SelectionFont.Underline;
 
             SizeTSComboBox.Text = TextEdit.SelectionFont.Size.ToString();
             SizeInMenuToolStripComboBox.Text = TextEdit.SelectionFont.Size.ToString();
@@ -147,20 +147,6 @@ namespace LR10
             CenterToolStripButton.Checked = CenterToolStripMenuItem.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Center;
             LeftToolStripButton.Checked = LeftToolStripMenuItem.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Left;
             RightToolStripButton.Checked = RightToolStripMenuItem.Checked = TextEdit.SelectionAlignment == HorizontalAlignment.Right;
-        }
-
-        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e) // ??? + синхронизация
-        {
-            if (SizeTSComboBox.SelectedItem != null)
-            {
-                int.TryParse(SizeTSComboBox.SelectedItem.ToString(), out int fontSize);
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, fontSize);
-            }
-            else if (int.TryParse(SizeTSComboBox.Text, out int customFontSize))
-            {
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customFontSize);
-            }
-            TextEdit.Focus();
         }
 
         private void FontColorToolStripButton_Click(object sender, EventArgs e)
@@ -331,16 +317,34 @@ namespace LR10
             }
         }
 
-        private void SizeInMenuToolStripComboBox_DropDownClosed(object sender, EventArgs e) // ???
+        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            if (SizeTSComboBox.SelectedItem != null)
+            {
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, Convert.ToInt16(SizeTSComboBox.SelectedItem.ToString()));
+            }
+            else
+            {
+                if (int.TryParse(SizeTSComboBox.Text, out int customSize))
+                {
+                    TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customSize);
+                }
+            }
+            TextEdit.Focus();
+        }
+
+        private void SizeInMenuToolStripComboBox_DropDownClosed(object sender, EventArgs e)
         {
             if (SizeInMenuToolStripComboBox.SelectedItem != null)
             {
-                int.TryParse(SizeInMenuToolStripComboBox.SelectedItem.ToString(), out int fontSize);
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, fontSize);
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, Convert.ToInt16(SizeInMenuToolStripComboBox.SelectedItem.ToString()));
             }
-            else if (int.TryParse(SizeInMenuToolStripComboBox.Text, out int customFontSize))
+            else
             {
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customFontSize);
+                if (int.TryParse(SizeInMenuToolStripComboBox.Text, out int customSize))
+                {
+                    TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customSize);
+                }
             }
             TextEdit.Focus();
         }
