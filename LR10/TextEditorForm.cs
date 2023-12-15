@@ -32,6 +32,19 @@ namespace LR10
 
         private void OpenToolStripButton_Click(object sender, EventArgs e)
         {
+            if (docChanged)
+            {
+                DialogResult result = MessageBox.Show("Хотите сохранить текущий документ?", "Сохранение документа", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    SaveToolStripButton_Click(sender, e);
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+
             openFileDialog1.Filter = "RTF files|*.rtf";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -39,6 +52,8 @@ namespace LR10
                 Text = "Текстовый редактор:   " + openFileDialog1.FileName;
             }
             path = openFileDialog1.FileName;
+
+            docChanged = false;
         }
 
         private void SaveToolStripButton_Click(object sender, EventArgs e)
@@ -57,6 +72,8 @@ namespace LR10
                     path = saveFileDialog1.FileName;
                 }   
             }
+
+            docChanged = false;
         }
 
         private void CreateToolStripButton_Click(object sender, EventArgs e)
@@ -90,47 +107,63 @@ namespace LR10
             MessageBox.Show("Главный разработчик: Мельников Максим\n Контактные данные:\n GitHub - github.com/fullfocusof \n VK - vk.com/y_u_kiddin_me", "Авторы", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void ChangeFontStyle(FontStyle fs, bool needAdd)
+        {
+            int start = TextEdit.SelectionStart;
+            int length = TextEdit.SelectionLength;
+            int temp = 0;
+
+            if(length <= 1 && TextEdit.SelectionFont != null)
+            {
+                if(needAdd) 
+                {
+                    TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | fs);
+                }
+                else
+                {
+                    TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~fs);
+                }
+
+                return;
+            }
+
+            RichTextBox textEditTemp = new RichTextBox();
+            textEditTemp.Rtf = TextEdit.SelectedRtf;
+            for (int i = 0; i < length; i++)
+            {
+                textEditTemp.Select(temp + i, 1);
+
+                if (needAdd)
+                {
+                    textEditTemp.SelectionFont = new Font(textEditTemp.SelectionFont, textEditTemp.SelectionFont.Style | fs);
+                }
+                else
+                {
+                    textEditTemp.SelectionFont = new Font(textEditTemp.SelectionFont, textEditTemp.SelectionFont.Style & ~fs);
+                }
+            }
+
+            textEditTemp.Select(temp, length);
+            TextEdit.SelectedRtf = textEditTemp.SelectedRtf;
+            TextEdit.Select(start, length);
+
+            return;
+        }
+
+
         private void BoldToolStripButton_Click(object sender, EventArgs e)
         {
-            if (BoldToolStripButton.Checked)
-            {
-                BoldToolStripMenuItem.Checked = true;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Bold);
-            }
-            else
-            {
-                BoldToolStripMenuItem.Checked = false;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Bold);
-            }
+            ChangeFontStyle(FontStyle.Bold, BoldToolStripButton.Checked);
         }
 
         private void ItalicToolStripButton_Click(object sender, EventArgs e)
         {
-            if (ItalicToolStripButton.Checked)
-            {
-                ItalicToolStripMenuItem.Checked = true;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Italic);
-            }   
-            else
-            {
-                ItalicToolStripMenuItem.Checked = false;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Italic);
-            }
-                
+            ChangeFontStyle(FontStyle.Italic, ItalicToolStripButton.Checked);
         }
 
         private void UnderlineToolStripButton_Click(object sender, EventArgs e)
         {
-            if (UnderlineToolStripButton.Checked)
-            {
-                UnderlineToolStripMenuItem.Checked = true;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Underline);
-            }
-            else
-            {
-                UnderlineToolStripMenuItem.Checked = false;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Underline);
-            }
+            ChangeFontStyle(FontStyle.Underline, UnderlineToolStripButton.Checked);
         }
 
         private void TextEdit_SelectionChanged(object sender, EventArgs e)
@@ -173,7 +206,12 @@ namespace LR10
             if (RightToolStripButton.Checked) RightToolStripButton.Checked = false; RightToolStripMenuItem.Checked = false;
             if (LeftToolStripButton.Checked) LeftToolStripButton.Checked = false; LeftToolStripMenuItem.Checked = false;
 
-            if (TextEdit.SelectionAlignment == HorizontalAlignment.Center) TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+            if (TextEdit.SelectionAlignment == HorizontalAlignment.Center)
+            {
+                TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+                LeftToolStripButton.Checked = true;
+                LeftToolStripMenuItem.Checked = true;
+            }
             else TextEdit.SelectionAlignment = HorizontalAlignment.Center;
         }
 
@@ -192,32 +230,37 @@ namespace LR10
             if (CenterToolStripButton.Checked) CenterToolStripButton.Checked = false; CenterToolStripMenuItem.Checked = false;
             if (LeftToolStripButton.Checked) LeftToolStripButton.Checked = false; LeftToolStripMenuItem.Checked = false;
 
-            if (TextEdit.SelectionAlignment == HorizontalAlignment.Right) TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+            if (TextEdit.SelectionAlignment == HorizontalAlignment.Right)
+            {
+                TextEdit.SelectionAlignment = HorizontalAlignment.Left;
+                LeftToolStripButton.Checked = true;
+                LeftToolStripMenuItem.Checked = true;
+            }
             else TextEdit.SelectionAlignment = HorizontalAlignment.Right;
         }
 
         private void CutToolStripButton_Click(object sender, EventArgs e)
         {
-            if (TextEdit.SelectedText != "")
+            if (TextEdit.SelectionLength > 0)
             {
-                Clipboard.SetText(TextEdit.SelectedText);
+                Clipboard.SetText(TextEdit.SelectedRtf, TextDataFormat.Rtf);
                 TextEdit.SelectedText = "";
             }
         }
 
         private void CopyToolStripButton_Click(object sender, EventArgs e)
         {
-            if (TextEdit.SelectedText != "")
+            if (TextEdit.SelectionLength > 0)
             {
-                Clipboard.SetText(TextEdit.SelectedText);
+                Clipboard.SetText(TextEdit.SelectedRtf, TextDataFormat.Rtf);
             }
         }
 
         private void InsertToolStripButton_Click(object sender, EventArgs e)
         {
-            if (Clipboard.ContainsText())
+            if (Clipboard.ContainsText(TextDataFormat.Rtf))
             {
-                TextEdit.SelectedText = Clipboard.GetText();
+                TextEdit.SelectedRtf = Clipboard.GetText(TextDataFormat.Rtf);
             }
         }
 
@@ -232,44 +275,17 @@ namespace LR10
 
         private void BoldToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (BoldToolStripMenuItem.Checked)
-            {
-                BoldToolStripButton.Checked = true;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Bold);
-            }
-            else
-            {
-                BoldToolStripButton.Checked = false;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Bold);
-            }
+            ChangeFontStyle(FontStyle.Bold, BoldToolStripMenuItem.Checked);
         }
 
         private void ItalicToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ItalicToolStripMenuItem.Checked)
-            {
-                ItalicToolStripButton.Checked = true;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Italic);
-            }
-            else
-            {
-                ItalicToolStripButton.Checked = false;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Italic);
-            }
+            ChangeFontStyle(FontStyle.Italic, ItalicToolStripMenuItem.Checked);
         }
 
         private void UnderlineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (UnderlineToolStripMenuItem.Checked)
-            {
-                UnderlineToolStripButton.Checked = true;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style | FontStyle.Underline);
-            } 
-            else
-            {
-                UnderlineToolStripButton.Checked = false;
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont, TextEdit.SelectionFont.Style & ~FontStyle.Underline);
-            }          
+            ChangeFontStyle(FontStyle.Underline, UnderlineToolStripMenuItem.Checked);
         }
 
         private void LeftToolStripMenuItem_Click(object sender, EventArgs e)
@@ -317,36 +333,77 @@ namespace LR10
             }
         }
 
-        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e)
+
+
+
+        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e) // ??????????????????????????
         {
-            if (SizeTSComboBox.SelectedItem != null)
+            if(SizeTSComboBox.SelectedItem != null) // выбрал либо принадлежит списку
             {
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, Convert.ToInt16(SizeTSComboBox.SelectedItem.ToString()));
+                int selectSize = Convert.ToInt16(SizeTSComboBox.SelectedItem.ToString()); // выбранный либо предыдущий
+                if (int.TryParse(SizeTSComboBox.Text, out int customSize) && selectSize != customSize)
+                {
+                    ChangeFontSize(customSize);
+                }
+                else
+                {
+                    ChangeFontSize(selectSize);
+                }
             }
             else
             {
                 if (int.TryParse(SizeTSComboBox.Text, out int customSize))
                 {
-                    TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customSize);
+                    ChangeFontSize(customSize);
                 }
-            }
+            }                            
             TextEdit.Focus();
         }
+
 
         private void SizeInMenuToolStripComboBox_DropDownClosed(object sender, EventArgs e)
         {
             if (SizeInMenuToolStripComboBox.SelectedItem != null)
             {
-                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, Convert.ToInt16(SizeInMenuToolStripComboBox.SelectedItem.ToString()));
+                ChangeFontSize(Convert.ToInt16(SizeInMenuToolStripComboBox.SelectedItem.ToString()));
             }
             else
             {
                 if (int.TryParse(SizeInMenuToolStripComboBox.Text, out int customSize))
                 {
-                    TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, customSize);
+                    ChangeFontSize(customSize);
                 }
             }
             TextEdit.Focus();
         }
+
+        private void ChangeFontSize(int fs)
+        {
+            int start = TextEdit.SelectionStart;
+            int length = TextEdit.SelectionLength;
+            int temp = 0;
+
+            if (length <= 1 && TextEdit.SelectionFont != null)
+            {
+                TextEdit.SelectionFont = new Font(TextEdit.SelectionFont.FontFamily, fs, TextEdit.SelectionFont.Style);
+                return;
+            }
+
+            RichTextBox textEditTemp = new RichTextBox();
+            textEditTemp.Rtf = TextEdit.SelectedRtf;
+            for (int i = 0; i < length; i++)
+            {
+                textEditTemp.Select(temp + i, 1);
+                textEditTemp.SelectionFont = new Font(textEditTemp.SelectionFont.FontFamily, fs, textEditTemp.SelectionFont.Style);
+            }
+
+            textEditTemp.Select(temp, length);
+            TextEdit.SelectedRtf = textEditTemp.SelectedRtf;
+            TextEdit.Select(start, length);
+
+            return;
+        }
+
+        
     }
 }
