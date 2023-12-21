@@ -217,6 +217,7 @@ namespace LR10
 
         private void LeftToolStripButton_Click(object sender, EventArgs e)
         {
+            LeftToolStripButton.Checked = true;
             LeftToolStripMenuItem.Checked = true;
             if (CenterToolStripButton.Checked) CenterToolStripButton.Checked = false; CenterToolStripMenuItem.Checked = false;
             if (RightToolStripButton.Checked) RightToolStripButton.Checked = false; RightToolStripMenuItem.Checked = false;
@@ -336,30 +337,6 @@ namespace LR10
 
 
 
-        private void SizeTSComboBox_DropDownClosed(object sender, EventArgs e) // ??????????????????????????
-        {
-            if(SizeTSComboBox.SelectedItem != null) // выбрал либо принадлежит списку
-            {
-                int selectSize = Convert.ToInt16(SizeTSComboBox.SelectedItem.ToString()); // выбранный либо предыдущий
-                if (int.TryParse(SizeTSComboBox.Text, out int customSize) && selectSize != customSize)
-                {
-                    ChangeFontSize(customSize);
-                }
-                else
-                {
-                    ChangeFontSize(selectSize);
-                }
-            }
-            else
-            {
-                if (int.TryParse(SizeTSComboBox.Text, out int customSize))
-                {
-                    ChangeFontSize(customSize);
-                }
-            }                            
-            TextEdit.Focus();
-        }
-
 
         private void SizeInMenuToolStripComboBox_DropDownClosed(object sender, EventArgs e)
         {
@@ -404,6 +381,58 @@ namespace LR10
             return;
         }
 
-        
+        private void SizeTSComboBox_Leave(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(SizeTSComboBox.Text))
+            {
+                if (int.TryParse(SizeTSComboBox.Text, out int customSize))
+                {
+                    ChangeFontSize(customSize);
+                }
+            }
+            TextEdit.Focus();
+        }
+
+        private void SizeTSComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (SizeTSComboBox.SelectedItem != null)
+            {
+                string selectedSize = SizeTSComboBox.SelectedItem.ToString();
+                int size;
+
+                if (int.TryParse(selectedSize, out size))
+                {
+                    ChangeFontSize(size);
+                }
+            }
+            TextEdit.Focus();
+        }
+
+        private void SizeInMenuToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (SizeInMenuToolStripComboBox.SelectedItem != null)
+            {
+                string selectedSize = SizeInMenuToolStripComboBox.SelectedItem.ToString();
+                int size;
+
+                if (int.TryParse(selectedSize, out size))
+                {
+                    ChangeFontSize(size);
+                }
+            }
+            TextEdit.Focus();
+        }
+
+        private void SizeInMenuToolStripComboBox_Leave(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(SizeInMenuToolStripComboBox.Text))
+            {
+                if (int.TryParse(SizeInMenuToolStripComboBox.Text, out int customSize))
+                {
+                    ChangeFontSize(customSize);
+                }
+            }
+            TextEdit.Focus();
+        }
     }
 }

@@ -229,6 +229,8 @@
             this.SizeInMenuToolStripComboBox.Name = "SizeInMenuToolStripComboBox";
             this.SizeInMenuToolStripComboBox.Size = new System.Drawing.Size(121, 23);
             this.SizeInMenuToolStripComboBox.DropDownClosed += new System.EventHandler(this.SizeInMenuToolStripComboBox_DropDownClosed);
+            this.SizeInMenuToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.SizeInMenuToolStripComboBox_SelectedIndexChanged);
+            this.SizeInMenuToolStripComboBox.Leave += new System.EventHandler(this.SizeInMenuToolStripComboBox_Leave);
             // 
             // toolStripSeparator1
             // 
@@ -453,7 +455,8 @@
             this.SizeTSComboBox.Name = "SizeTSComboBox";
             this.SizeTSComboBox.Size = new System.Drawing.Size(55, 23);
             this.SizeTSComboBox.Text = "12";
-            this.SizeTSComboBox.DropDownClosed += new System.EventHandler(this.SizeTSComboBox_DropDownClosed);
+            this.SizeTSComboBox.SelectedIndexChanged += new System.EventHandler(this.SizeTSComboBox_SelectedIndexChanged);
+            this.SizeTSComboBox.Leave += new System.EventHandler(this.SizeTSComboBox_Leave);
             // 
             // FontColorToolStripButton
             // 
